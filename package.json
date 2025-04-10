@@ -6,6 +6,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
+    "create-module": "ts-node ./src/gm.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nadir Hossain",
@@ -29,7 +30,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "firebase-admin": "^13.2.0",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
@@ -38,7 +38,6 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "socket.io": "^4.8.1",
-    "stripe": "^18.0.0",
     "twilio": "^5.5.2",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
