@@ -1,12 +1,5 @@
 import { Model, Types } from 'mongoose';
-import { USER_ROLES } from '../../../enums/user';
-
-interface IStripeAccountInfo {
-    status: string;
-    stripeAccountId: string;
-    externalAccountId: string;
-    currency: string;
-}
+import { PERMISSION, USER_ROLES } from '../../../enums/user';
 
 interface IAuthenticationProps {
     isResetPassword: boolean;
@@ -15,22 +8,21 @@ interface IAuthenticationProps {
 }
 
 export type IUser = {
-    name: string;
-    appId: string;
-    role: USER_ROLES;
-    contact: string;
+    firstName: string;
+    lastName: string;
+    title?: string;
     email: string;
+    phone: string;
     password: string;
-    location: string;
+    permissions?: PERMISSION[];
+    do?: boolean;
+    authorizer?: Types.ObjectId;
+    role: USER_ROLES;
     profile: string;
     verified: boolean;
     authentication?: IAuthenticationProps;
-    accountInformation?: IStripeAccountInfo;
 }
 
 export type UserModal = {
-    isExistUserById(id: string): any;
-    isExistUserByEmail(email: string): any;
-    isAccountCreated(id: string): any;
     isMatchPassword(password: string, hashPassword: string): boolean;
 } & Model<IUser>;

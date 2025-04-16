@@ -6,19 +6,12 @@ import ApiError from '../../../errors/ApiErrors';
 import { emailHelper } from '../../../helpers/emailHelper';
 import { jwtHelper } from '../../../helpers/jwtHelper';
 import { emailTemplate } from '../../../shared/emailTemplate';
-import {
-    IAuthResetPassword,
-    IChangePassword,
-    ILoginData,
-    IVerifyEmail
-} from '../../../types/auth';
+import { IAuthResetPassword, IChangePassword, ILoginData, IVerifyEmail } from '../../../types/auth';
 import cryptoToken from '../../../util/cryptoToken';
 import generateOTP from '../../../util/generateOTP';
 import { ResetToken } from '../resetToken/resetToken.model';
 import { User } from '../user/user.model';
-import { IUser } from '../user/user.interface';
 
-//login
 const loginUserFromDB = async (payload: ILoginData) => {
 
     const { email, password } = payload;
@@ -54,10 +47,9 @@ const loginUserFromDB = async (payload: ILoginData) => {
     return { accessToken, refreshToken };
 };
 
-//forget password
 const forgetPasswordToDB = async (email: string) => {
 
-    const isExistUser = await User.isExistUserByEmail(email);
+    const isExistUser = await User.findOne({ email });
     if (!isExistUser) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
     }
@@ -80,7 +72,6 @@ const forgetPasswordToDB = async (email: string) => {
     await User.findOneAndUpdate({ email }, { $set: { authentication } });
 };
   
-//verify email
 const verifyEmailToDB = async (payload: IVerifyEmail) => {
 
     const { email, oneTimeCode } = payload;
@@ -136,7 +127,6 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
     return { data, message };
 };
   
-//forget password
 const resetPasswordToDB = async ( token: string, payload: IAuthResetPassword ) => {
 
     const { newPassword, confirmPassword } = payload;
@@ -213,7 +203,6 @@ const changePasswordToDB = async ( user: JwtPayload, payload: IChangePassword) =
     await User.findOneAndUpdate({ _id: user.id }, updateData, { new: true });
 };
 
-
 const newAccessTokenToUser = async(token: string)=>{
 
     // Check if the token is provided
@@ -280,66 +269,6 @@ const resendVerificationEmailToDB = async (email:string) => {
     
 };
 
-// social authentication
-const socialLoginFromDB = async (payload: IUser) => {
-
-    const { appId, role } = payload;
-
-    const isExistUser = await User.findOne({ appId });
-
-    if (isExistUser) {
-
-        //create token
-        const accessToken = jwtHelper.createToken(
-            { id: isExistUser._id, role: isExistUser.role },
-            config.jwt.jwt_secret as Secret,
-            config.jwt.jwt_expire_in as string
-        );
-
-        //create token
-        const refreshToken = jwtHelper.createToken(
-            { id: isExistUser._id, role: isExistUser.role },
-            config.jwt.jwtRefreshSecret as Secret,
-            config.jwt.jwtRefreshExpiresIn as string
-        );
-
-        return { accessToken, refreshToken };
-
-    } else {
-
-        const user = await User.create({ appId, role, verified: true });
-        if (!user) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to created User")
-        }
-
-        //create token
-        const accessToken = jwtHelper.createToken(
-            { id: user._id, role: user.role },
-            config.jwt.jwt_secret as Secret,
-            config.jwt.jwt_expire_in as string
-        );
-
-        //create token
-        const refreshToken = jwtHelper.createToken(
-            { id: user._id, role: user.role },
-            config.jwt.jwtRefreshSecret as Secret,
-            config.jwt.jwtRefreshExpiresIn as string
-        );
-
-        return { accessToken, refreshToken };
-    }
-}
-
-// delete user
-const deleteUserFromDB = async (user: JwtPayload) => {
-
-    const isExistUser = await User.findByIdAndDelete(user.id);
-    if (!isExistUser) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
-    }
-    return;
-};
-
 export const AuthService = {
     verifyEmailToDB,
     loginUserFromDB,
@@ -347,7 +276,5 @@ export const AuthService = {
     resetPasswordToDB,
     changePasswordToDB,
     newAccessTokenToUser,
-    resendVerificationEmailToDB,
-    socialLoginFromDB,
-    deleteUserFromDB
+    resendVerificationEmailToDB
 };

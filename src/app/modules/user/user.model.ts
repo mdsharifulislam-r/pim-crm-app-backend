@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { USER_ROLES } from "../../../enums/user";
+import { PERMISSION, USER_ROLES } from "../../../enums/user";
 import { IUser, UserModal } from "./user.interface";
 import bcrypt from "bcrypt";
 import ApiError from "../../../errors/ApiErrors";
@@ -8,38 +8,33 @@ import config from "../../../config";
 
 const userSchema = new Schema<IUser, UserModal>(
     {
-        name: {
+        firstName: {
             type: String,
             required: false,
         },
-        appId: {
+        lastName: {
             type: String,
             required: false,
         },
-        role: {
+        title: {
             type: String,
-            enum: Object.values(USER_ROLES),
-            required: true,
+            required: false,
         },
         email: {
             type: String,
-            required: false,
+            required: true,
             unique: true,
             lowercase: true,
         },
-        contact: {
+        phone: {
             type: String,
             required: false,
         },
         password: {
             type: String,
-            required: false,
+            required: true,
             select: 0,
             minlength: 8,
-        },
-        location: {
-            type: String,
-            required: false,
         },
         profile: {
             type: String,
@@ -48,6 +43,16 @@ const userSchema = new Schema<IUser, UserModal>(
         verified: {
             type: Boolean,
             default: false,
+        },
+        role: {
+            type: String,
+            enum: Object.values(USER_ROLES),
+            required: true,
+        },
+        permissions: {
+            type: [String],
+            enum: Object.values(PERMISSION),
+            default: [],
         },
         authentication: {
             type: {
@@ -65,45 +70,12 @@ const userSchema = new Schema<IUser, UserModal>(
                 },
             },
             select: 0
-        },
-        accountInformation: {
-            status: {
-              type: Boolean,
-                default: false,
-            },
-            stripeAccountId: {
-                type: String,
-            },
-            externalAccountId: {
-                type: String,
-            },
-            currency: {
-                type: String,
-            }
         }
     },
     {
         timestamps: true
     }
 )
-
-
-//exist user check
-userSchema.statics.isExistUserById = async (id: string) => {
-    const isExist = await User.findById(id);
-    return isExist;
-};
-  
-userSchema.statics.isExistUserByEmail = async (email: string) => {
-    const isExist = await User.findOne({ email });
-    return isExist;
-};
-  
-//account check
-userSchema.statics.isAccountCreated = async (id: string) => {
-    const isUserExist:any = await User.findById(id);
-    return isUserExist.accountInformation.status;
-};
   
 //is match password
 userSchema.statics.isMatchPassword = async ( password: string, hashPassword: string): Promise<boolean> => {

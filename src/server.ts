@@ -5,6 +5,7 @@ import { errorLogger, logger } from "./shared/logger";
 import colors from 'colors';
 import { socketHelper } from "./helpers/socketHelper";
 import { Server } from "socket.io";
+import seedSuperAdmin from "./DB";
 
 
 //uncaught exception
@@ -18,6 +19,8 @@ let server: any;
 
 async function main() {
     try {
+
+        seedSuperAdmin();
 
         mongoose.connect(config.database_url as string);
         logger.info(colors.green('🚀 Database connected successfully'));

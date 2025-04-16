@@ -1,4 +1,4 @@
-import { ICreateAccount, IResetPassword } from '../types/emailTemplate';
+import { ICreateAccount, IResetPassword, IAddTeamMember } from '../types/emailTemplate';
 
 const createAccount = (values: ICreateAccount) => {
     const data = {
@@ -36,6 +36,52 @@ const createAccount = (values: ICreateAccount) => {
     return data;
 }
 
+const addTeamMember = (values: IAddTeamMember) => {
+    const data = {
+        to: values.email,
+        subject: '🎉 Welcome to the Team!',
+        html: `
+        <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
+          <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  
+            <!-- Logo -->
+            <img src="https://res.cloudinary.com/ddqovbzxy/image/upload/v1737276027/pim_wxwhiv.png" alt="PIM Logo" style="display: block; margin: 0 auto 20px; width:150px" />
+  
+            <!-- Greeting -->
+            <h2 style="color: #28a745; font-size: 24px; margin-bottom: 20px;">Congratulations, ${values.name}!</h2>
+  
+            <!-- Message -->
+            <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+              You've been successfully added to the PIM team. We’re excited to have you on board!
+            </p>
+  
+            <!-- Credentials Section -->
+            <div style="background-color: #f1f1f1; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px;">
+              <p><strong>Email:</strong> ${values.email}</p>
+              <p><strong>Temporary Password:</strong> ${values.password}</p>
+              <p><strong>Assigned Permissions:</strong></p>
+              <ul style="margin-left: 20px; color: #333;">
+                ${values.permissions.map((perm) => `<li>${perm}</li>`)}
+              </ul>
+            </div>
+  
+            <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+              Please log in and change your password as soon as possible. If you have any questions, feel free to reach out.
+            </p>
+  
+            <!-- Footer -->
+            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 30px;">Welcome aboard once again!</p>
+            <p style="color: #999; font-size: 12px; text-align: center;">&copy; 2024 PIM. All rights reserved.</p>
+  
+          </div>
+        </body>
+      `
+    };
+
+    return data;
+};
+
+
 
 const resetPassword = (values: IResetPassword) => {
     const data = {
@@ -59,5 +105,6 @@ const resetPassword = (values: IResetPassword) => {
 
 export const emailTemplate = {
     createAccount,
-    resetPassword
+    resetPassword,
+    addTeamMember,
 };

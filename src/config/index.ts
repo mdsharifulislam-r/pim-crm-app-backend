@@ -20,5 +20,9 @@ export default{
         port: process.env.EMAIL_PORT,
         host: process.env.EMAIL_HOST,
         pass: process.env.EMAIL_PASS
+    },
+    admin: {
+        email:process.env.ADMIN_EMAIL,
+        password: process.env.ADMIN_PASSWORD
     }
 }

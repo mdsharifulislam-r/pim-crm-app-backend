@@ -22,6 +22,7 @@ router.post(
     '/refresh-token',
     AuthController.newAccessToken
 );
+
 router.post(
     '/resend-otp',
     AuthController.resendVerificationEmail
@@ -38,7 +39,7 @@ router.post(
             next();
 
         } catch (error) {
-            return res.status(500).json({ message: "Failed to convert string to number" });
+            res.status(500).json({ message: "Failed to convert string to number" });
         }
     },
     validateRequest(AuthValidation.createVerifyEmailZodSchema),
@@ -53,25 +54,9 @@ router.post(
 
 router.post(
     '/change-password',
-    auth(USER_ROLES.ADMIN, USER_ROLES.USER),
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.TEAM),
     validateRequest(AuthValidation.createChangePasswordZodSchema),
     AuthController.changePassword
-);
-
-router.post(
-    '/resend-otp',
-    AuthController.resendVerificationEmail
-);
-
-router.post(
-    '/social-login',
-    AuthController.socialLogin
-);
-
-router.delete(
-    '/delete-account',
-    auth(USER_ROLES.ADMIN),
-    AuthController.deleteUser
 );
 
 export const AuthRoutes = router;

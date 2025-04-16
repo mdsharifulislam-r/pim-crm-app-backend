@@ -16,7 +16,6 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-
 const loginUser = catchAsync(async (req: Request, res: Response) => {
     const { ...loginData } = req.body;
     const result = await AuthService.loginUserFromDB(loginData);
@@ -91,29 +90,6 @@ const resendVerificationEmail = catchAsync(async (req: Request, res: Response) =
     });
 });
 
-const socialLogin = catchAsync(async (req: Request, res: Response) => {
-    const result = await AuthService.socialLoginFromDB(req.body);
-
-    sendResponse(res, {
-        success: true,
-        statusCode: StatusCodes.OK,
-        message: 'Logged in Successfully',
-        data: result
-    });
-});
-
-// delete user
-const deleteUser = catchAsync(async (req: Request, res: Response) => {
-    const result = await AuthService.deleteUserFromDB(req.user);
-
-    sendResponse(res, {
-        success: true,
-        statusCode: StatusCodes.OK,
-        message: 'Account Deleted successfully',
-        data: result
-    });
-});
-
 export const AuthController = {
     verifyEmail,
     loginUser,
@@ -121,7 +97,5 @@ export const AuthController = {
     resetPassword,
     changePassword,
     newAccessToken,
-    resendVerificationEmail,
-    socialLogin,
-    deleteUser
-};
+    resendVerificationEmail
+}
