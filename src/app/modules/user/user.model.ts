@@ -49,6 +49,11 @@ const userSchema = new Schema<IUser, UserModal>(
             enum: Object.values(USER_ROLES),
             required: true,
         },
+        category: {
+            type: String,
+            enum: Object.values(USER_ROLES),
+            required: true,
+        },
         permissions: {
             type: [String],
             enum: Object.values(PERMISSION),

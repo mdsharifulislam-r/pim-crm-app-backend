@@ -12,7 +12,7 @@ export type IClient = {
     country: string;
     city: string;
     tags: string[];
-    file?: string[];
+    profile: string;
 };
 
 export type ClientModel = Model<IClient, ClientModel>;
