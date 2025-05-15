@@ -1,4 +1,4 @@
-import { PERMISSION } from "../enums/user";
+import { USER_ROLES } from "../enums/user";
 
 export type ICreateAccount = {
     name: string;
@@ -10,7 +10,7 @@ export type IAddTeamMember = {
     name: string;
     email: string;
     password: string;
-    permissions: PERMISSION[];
+    role: USER_ROLES;
 };
   
 export type IResetPassword = {

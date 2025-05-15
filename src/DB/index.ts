@@ -6,7 +6,7 @@ import { logger } from '../shared/logger';
 const superUser = {
     firstName: 'Super',
     lastName: 'Admin',
-    role: USER_ROLES.SUPER_ADMIN,
+    role: USER_ROLES.ADMIN,
     email: config.admin.email,
     password: config.admin.password,
     verified: true,
@@ -14,14 +14,14 @@ const superUser = {
 
 const seedSuperAdmin = async () => {
     const isExistSuperAdmin = await User.findOne({
-        role: USER_ROLES.SUPER_ADMIN,
+        role: USER_ROLES.ADMIN,
     });
 
     if (!isExistSuperAdmin) {
         await User.create(superUser);
         logger.info(colors.green('✔ Super admin created successfully!'));
     } else {
-        logger.info(colors.green('✔ Already Created Super Admin!'));
+        
     }
 
 };

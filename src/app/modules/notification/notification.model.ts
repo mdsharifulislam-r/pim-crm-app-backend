@@ -7,16 +7,12 @@ const notificationSchema = new Schema<INotification, NotificationModel>(
             type: String,
             required: true
         },
-        receiver: {
-            type: Schema.Types.ObjectId,
+        receivers: {
+            type: [Schema.Types.ObjectId],
             ref: 'User',
-            required: true
-        },
-        referenceId: {
-            type: String,
             required: false
         },
-        screen: {
+        reference: {
             type: String,
             required: false
         },
@@ -26,9 +22,27 @@ const notificationSchema = new Schema<INotification, NotificationModel>(
         },
         type: {
             type: String,
-            enum: ['ADMIN'],
+            enum: ["general", "chat", "group"],
+            required: false,
+            default: "general"
+        },
+        readers: {
+            type: [Schema.Types.ObjectId],
+            ref: 'User',
             required: false
+        },
+
+        link: {
+            type: String,
+            enum: ["task", "case", "chat", "group", "user", "document", "team", "client"],
+            required: false,
+        },
+        title: {
+            type: String,
+            required: true
         }
+        
+
     },
     {
         timestamps: true

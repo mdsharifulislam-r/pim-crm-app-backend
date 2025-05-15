@@ -1,5 +1,7 @@
 import { Model, Types } from 'mongoose';
-import { PERMISSION, USER_ROLES } from '../../../enums/user';
+import {  USER_ROLES } from '../../../enums/user';
+import { TIME_ZONE } from '../../../enums/timeZone';
+import { TeamRole } from '../../../enums/teamRole';
 
 interface IAuthenticationProps {
     isResetPassword: boolean;
@@ -14,13 +16,14 @@ export type IUser = {
     email: string;
     phone: string;
     password: string;
-    permissions?: PERMISSION[];
-    do?: boolean;
+    notify?: boolean;
     authorizer?: Types.ObjectId;
     role: USER_ROLES;
     profile: string;
     verified: boolean;
     authentication?: IAuthenticationProps;
+    timezone?: TIME_ZONE;
+    team_role:TeamRole
 }
 
 export type UserModal = {

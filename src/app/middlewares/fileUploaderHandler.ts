@@ -5,7 +5,7 @@ import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import ApiError from '../../errors/ApiErrors';
 
-const fileUploadHandler = () => {
+const fileUploadHandler = (fieldName?: string) => {
 
     //create upload folder
     const baseUploadDir = path.join(process.cwd(), 'uploads');
@@ -24,14 +24,8 @@ const fileUploadHandler = () => {
     const storage = multer.diskStorage({
 
         destination: (req, file, cb) => {
-            let uploadDir;
-            switch (file.fieldname) {
-                case 'image':
-                    uploadDir = path.join(baseUploadDir, 'images');
-                break;
-                default:
-                    throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
-            }
+            let uploadDir=path.join(baseUploadDir);
+    
             createDir(uploadDir);
             cb(null, uploadDir);
         },
@@ -53,24 +47,11 @@ const fileUploadHandler = () => {
     //file filter
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 
-        // console.log("file handler",file)
-        if (file.fieldname === 'image') {
-            if (
-                file.mimetype === 'image/jpeg' ||
-                file.mimetype === 'image/png' ||
-                file.mimetype === 'image/jpg'
-            ) {
-                cb(null, true);
-            } else {
-                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .jpeg, .png, .jpg file supported'))
-            }
-        }else {
-            cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'))
-        }
+      cb(null, true);
     };
 
     const upload = multer({ storage: storage, fileFilter: filterFilter})
-    .fields([{ name: 'image', maxCount: 3 } ]);
+    .fields([{ name:fieldName || 'file', maxCount: 10 } ]);
     return upload;
 
 };

@@ -4,9 +4,12 @@ import { TeamService } from './team.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { USER_ROLES } from '../../../enums/user';
+import { join } from 'path';
+import { getSingleFilePath } from '../../../shared/getFilePath';
+import { cloudinaryHelper } from '../../../helpers/cloudinaryHelper';
 
 const addTeamMember = catchAsync( async (req: Request, res: Response, next: NextFunction) => {
-    const result = await TeamService.createTeamMemberInDB({...req.body, role: USER_ROLES.TEAM, verified: true, authorizer: req.user.id});
+    const result = await TeamService.createTeamMemberInDB({...req.body, authorizer: req.user.id});
 
     sendResponse(res, {
         success: true,
@@ -17,7 +20,8 @@ const addTeamMember = catchAsync( async (req: Request, res: Response, next: Next
 });
 
 const retrieveTeamMember = catchAsync( async (req: Request, res: Response, next: NextFunction) => {
-    const result = await TeamService.retrievedTeamMemberFromDB(req.user, req.query);
+    const id = req.params.id
+    const result = await TeamService.retrievedTeamMemberFromDB(id, req.query);
 
     sendResponse(res, {
         success: true,
@@ -48,9 +52,22 @@ const deleteTeamMember = catchAsync( async (req: Request, res: Response, next: N
     });
 });
 
+const getTeams = catchAsync(
+    async (req:Request,res:Response)=>{
+        const result = await TeamService.retrieveTeams()
+        sendResponse(res,{
+            success:true,
+            statusCode:StatusCodes.OK,
+            message:'teams retrieved successfully',
+            data:result
+        })
+    }
+)
+
 export const TeamController = { 
     addTeamMember, 
     retrieveTeamMember, 
     updateTeamMember, 
-    deleteTeamMember 
+    deleteTeamMember ,
+    getTeams
 };

@@ -8,11 +8,11 @@ const router = express.Router();
 
 router.route('/')
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEAM),
+        auth(),
         UserController.getUserProfile
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEAM),
+        auth(),
         fileUploadHandler(),
         UserController.updateProfile
     );

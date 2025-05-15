@@ -41,7 +41,7 @@ const addTeamMember = (values: IAddTeamMember) => {
         to: values.email,
         subject: '🎉 Welcome to the Team!',
         html: `
-        <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
+      <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
           <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
   
             <!-- Logo -->
@@ -59,10 +59,7 @@ const addTeamMember = (values: IAddTeamMember) => {
             <div style="background-color: #f1f1f1; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px;">
               <p><strong>Email:</strong> ${values.email}</p>
               <p><strong>Temporary Password:</strong> ${values.password}</p>
-              <p><strong>Assigned Permissions:</strong></p>
-              <ul style="margin-left: 20px; color: #333;">
-                ${values.permissions.map((perm) => `<li>${perm}</li>`)}
-              </ul>
+              <p><strong>Assigned as ${values.role.toUpperCase()}</strong></p>
             </div>
   
             <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">

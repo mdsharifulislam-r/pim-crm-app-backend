@@ -1,10 +1,12 @@
 import { model, Schema } from "mongoose";
-import { PERMISSION, USER_ROLES } from "../../../enums/user";
+import {  USER_ROLES } from "../../../enums/user";
 import { IUser, UserModal } from "./user.interface";
 import bcrypt from "bcrypt";
 import ApiError from "../../../errors/ApiErrors";
 import { StatusCodes } from "http-status-codes";
 import config from "../../../config";
+import { TIME_ZONE } from "../../../enums/timeZone";
+import { TeamRole } from "../../../enums/teamRole";
 
 const userSchema = new Schema<IUser, UserModal>(
     {
@@ -49,15 +51,20 @@ const userSchema = new Schema<IUser, UserModal>(
             enum: Object.values(USER_ROLES),
             required: true,
         },
-        category: {
-            type: String,
-            enum: Object.values(USER_ROLES),
-            required: true,
+        authorizer: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: false,
         },
-        permissions: {
-            type: [String],
-            enum: Object.values(PERMISSION),
-            default: [],
+        team_role: {
+            type: String,
+            enum: Object.values(TeamRole),
+            required:false,
+            default:TeamRole.MEMBER
+        },
+        timezone: {
+            type: String,
+            default: TIME_ZONE.UTC
         },
         authentication: {
             type: {
